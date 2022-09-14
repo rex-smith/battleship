@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<coverage generated="1663195024227" clover="3.2.0">
+  <project timestamp="1663195024227" name="All files">
+    <metrics statements="22" coveredstatements="22" conditionals="10" coveredconditionals="10" methods="6" coveredmethods="6" elements="38" coveredelements="38" complexity="0" loc="22" ncloc="22" packages="1" files="2" classes="2"/>
+    <file name="board.js" path="/mnt/c/Users/Rex/Documents/Coding/the_odin_project/battleship/board.js">
+      <metrics statements="15" coveredstatements="15" conditionals="8" coveredconditionals="8" methods="3" coveredmethods="3"/>
+      <line num="4" count="4" type="stmt"/>
+      <line num="5" count="4" type="stmt"/>
+      <line num="39" count="19" type="stmt"/>
+      <line num="40" count="19" type="stmt"/>
+      <line num="41" count="95" type="stmt"/>
+      <line num="42" count="323" type="cond" truecount="2" falsecount="0"/>
+      <line num="46" count="18" type="stmt"/>
+      <line num="47" count="18" type="stmt"/>
+      <line num="51" count="19" type="cond" truecount="2" falsecount="0"/>
+      <line num="52" count="1" type="stmt"/>
+      <line num="57" count="2" type="stmt"/>
+      <line num="58" count="6" type="cond" truecount="2" falsecount="0"/>
+      <line num="59" count="1" type="stmt"/>
+      <line num="62" count="1" type="stmt"/>
+      <line num="65" count="4" type="stmt"/>
+    </file>
+    <file name="ship.js" path="/mnt/c/Users/Rex/Documents/Coding/the_odin_project/battleship/ship.js">
+      <metrics statements="7" coveredstatements="7" conditionals="2" coveredconditionals="2" methods="3" coveredmethods="3"/>
+      <line num="2" count="22" type="stmt"/>
+      <line num="5" count="22" type="stmt"/>
+      <line num="9" count="7" type="stmt"/>
+      <line num="10" count="21" type="cond" truecount="2" falsecount="0"/>
+      <line num="11" count="1" type="stmt"/>
+      <line num="14" count="6" type="stmt"/>
+      <line num="17" count="22" type="stmt"/>
+    </file>
+  </project>
+</coverage>

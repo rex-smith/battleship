@@ -16,12 +16,6 @@ export default function boardFactory() {
       [5, 9],
       [5, 8],
       [5, 7],
-      [5, 6],
-    ]),
-    shipFactory(3, [
-      [7, 2],
-      [6, 2],
-      [5, 2],
     ]),
     shipFactory(3, [
       [7, 2],
@@ -33,7 +27,7 @@ export default function boardFactory() {
       [7, 7],
       [6, 7],
     ]),
-    shipFactory(3, [
+    shipFactory(2, [
       [3, 9],
       [4, 9],
     ]),
@@ -45,7 +39,10 @@ export default function boardFactory() {
     let confirmedHit = false;
     for (let i = 0; i < shipArray.length; i++) {
       for (let j = 0; j < shipArray[i].locationArray.length; j++) {
-        if (coordinates === shipArray[i].locationArray[j]) {
+        if (
+          coordinates[0] === shipArray[i].locationArray[j][0] &&
+          coordinates[1] === shipArray[i].locationArray[j][1]
+        ) {
           shipArray[i].hit(j);
           confirmedHit = true;
         }
@@ -58,7 +55,7 @@ export default function boardFactory() {
 
   function allSunk() {
     for (let i = 0; i < shipArray.length; i++) {
-      if (shipArray[i].isSunk === false) {
+      if (shipArray[i].isSunk() === false) {
         return false;
       }
     }
@@ -66,6 +63,9 @@ export default function boardFactory() {
   }
 
   return {
+    shipArray,
+    missedAttacks,
     receiveAttack,
+    allSunk,
   };
 }

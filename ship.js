@@ -1,6 +1,5 @@
-export default function shipFactory(length) {
+export default function shipFactory(length, locationArray) {
   const healthArray = new Array(length).fill(0);
-  const locationArray = new Array(length).fill(null);
 
   function hit(position) {
     healthArray[position] = 1;
@@ -16,11 +15,9 @@ export default function shipFactory(length) {
   }
 
   return {
-    id,
     healthArray,
     locationArray,
     hit,
     isSunk,
-    setLocation,
   };
 }
