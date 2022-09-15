@@ -1,0 +1,38 @@
+* {
+  box-sizing: border-box;
+  font-family: "Roboto", sans-serif;
+}
+
+body {
+  box-sizing: border-box;
+  font-family: "Roboto", sans-serif;
+}
+
+nav {
+  height: 70px;
+  font-size: 4rem;
+  font-weight: 700;
+  background-color: navy;
+  color: white;
+}
+
+.board-container {
+  margin: 20px auto;
+  width: 800px;
+}
+
+.board {
+  display: grid;
+  grid-template-columns: repeat(10, 50px);
+  grid-template-rows: repeat(10, 50px);
+  gap: 10px;
+}
+
+.cell {
+  background-color: skyblue;
+  border: 1px solid black;
+}
+
+.cell:hover {
+  background-color: navy;
+}
