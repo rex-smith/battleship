@@ -1,6 +1,6 @@
-export default (function () {
+export default function () {
   function getCellFromCoordinates(coordinates) {
-    const cell = document.getElementById(`${coordinates[0]}x${coordinates[1]}`);
+    let cell = document.getElementById(`${coordinates[0]}x${coordinates[1]}`);
     return cell;
   }
 
@@ -35,7 +35,5 @@ export default (function () {
 
   return {
     showBoard,
-    displayHitCell,
-    displayMissedCell,
   };
-})();
+}

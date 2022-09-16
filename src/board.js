@@ -9,6 +9,44 @@ import {
 export default function boardFactory() {
   let missedAttacks = [];
   let shipArray = [];
+  let occupiedCells = [];
+
+  function sameCoordinates(coordinatesPairOne, coordinatesPairTwo) {
+    if (
+      coordinatesPairOne[0] === coordinatesPairTwo[0] &&
+      coordinatesPairOne[1] === coordinatesPairTwo[1]
+    ) {
+      return true;
+    }
+    return false;
+  }
+
+  function validLocationArray(locationArray) {
+    // Check if any off the board
+    for (let i = 0; i < locationArray.length; i++) {
+      if (
+        !(
+          locationArray[i][0] >= 1 &&
+          locationArray[i][0] <= 10 &&
+          locationArray[i][1] >= 1 &&
+          locationArray[i][1] <= 10
+        )
+      ) {
+        return false;
+      }
+    }
+
+    // Check if overlaps with occupied
+    for (let i = 0; i < occupiedCells.length; i++) {
+      for (let j = 0; j < locationArray.length; j++) {
+        if (sameCoordinates(occupiedCells[i], locationArray[j])) {
+          return false;
+        }
+      }
+    }
+
+    return true;
+  }
 
   function buildLocationArray(length, startingCell, direction) {
     let x = startingCell[0];
@@ -22,74 +60,49 @@ export default function boardFactory() {
       for (let i = y; i < y + length; i++) {
         locationArray.push([x, i]);
       }
-    } else {
-      throw Error("You do not have a valid direction!!");
     }
     return locationArray;
   }
 
-  function possibleStartCells(length, direction) {
-    let possibleStartArray = [];
-    if (direction === "h") {
-      for (let i = 1; i <= 10 - length; i++) {
-        for (let j = 1; j <= 10; j++) {
-          possibleStartArray.push([i, j]);
-        }
-      }
-    } else if (direction === "v") {
-      for (let i = 1; i <= 10; i++) {
-        for (let j = 1; j <= 10 - length; j++) {
-          possibleStartArray.push([i, j]);
-        }
-      }
-    } else {
-      throw Error("You do not have a valid direction!!");
-    }
-    return possibleStartArray;
-  }
-
-  function placeShip(length, startCell, direction) {
-    let locationArray = buildLocationArray(length, startCell, direction);
+  function placeShip(locationArray) {
     let newShip = shipFactory(locationArray);
     shipArray.push(newShip);
+  }
+
+  function getStartCell(playerType) {
+    let startCell = [0, 0];
+    if (playerType === "computer") {
+      startCell = getRandomCell();
+    } else {
+      startCell = getCellFromHuman();
+    }
+    return startCell;
+  }
+
+  function getDirection(playerType) {
+    let direction = "";
+    if (playerType === "computer") {
+      direction = getRandomDirection();
+    } else {
+      direction = getDirectionFromHuman();
+    }
+    return direction;
   }
 
   function placeShips(playerType) {
     const battleShipLengths = [5, 4, 3, 3, 2];
     for (let i = 0; i < battleShipLengths.length; i++) {
-      let length = battleShipLengths[i];
-      console.log(`You are placing a ship with length ${length}`);
-
-      // Direction
-      let direction = "";
-      if (playerType === "computer") {
-        direction = getRandomDirection();
-      } else {
-        direction = getDirectionFromHuman();
+      let locationArray = [0, 0];
+      while (!validLocationArray(locationArray)) {
+        let length = battleShipLengths[i];
+        // Direction
+        let direction = getDirection(playerType);
+        // Start Cell
+        let startCell = getStartCell(playerType);
+        locationArray = buildLocationArray(length, startCell, direction);
       }
-
-      // Start Cell
-      let startCell = [0, 0];
-      const possibleStartArray = possibleStartCells(length, direction);
-      while (!possibleStartArray.includes(startCell)) {
-        if (playerType === "computer") {
-          startCell = getRandomCell();
-        } else {
-          startCell = getCellFromHuman();
-        }
-      }
-      placeShip(length, startCell, direction);
+      placeShip(locationArray);
     }
-  }
-
-  function sameCoordinates(coordinatesPairOne, coordinatesPairTwo) {
-    if (
-      coordinatesPairOne[0] === coordinatesPairTwo[0] &&
-      coordinatesPairOne[1] === coordinatesPairTwo[1]
-    ) {
-      return true;
-    }
-    return false;
   }
 
   function receiveAttack(coordinates) {

@@ -4,7 +4,8 @@ import { getCellFromHuman, getRandomCell } from "./randomCell";
 export default function playerFactory(name, playerType) {
   let wins = 0;
   let losses = 0;
-  let board = null;
+  let board = boardFactory();
+
   function printRecord() {
     console.log(`${name}: ${wins} win(s), ${losses} loss(es)`);
   }
@@ -20,7 +21,6 @@ export default function playerFactory(name, playerType) {
   }
 
   function setBoard() {
-    board = boardFactory();
     board.placeShips(playerType);
   }
 

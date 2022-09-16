@@ -25,10 +25,12 @@ describe("build location array", () => {
 
 // Place ship
 describe("place ship", () => {
-  testBoard = boardFactory();
-
   it("places a boat correctly vertically", () => {
-    testBoard.placeShip(2, [5, 1], "v");
+    testBoard = boardFactory();
+    testBoard.placeShip([
+      [5, 1],
+      [5, 2],
+    ]);
     expect(testBoard.shipArray[0].locationArray).toStrictEqual([
       [5, 1],
       [5, 2],
@@ -36,8 +38,13 @@ describe("place ship", () => {
   });
 
   it("places a boat correctly horizontally", () => {
-    testBoard.placeShip(3, [7, 3], "h");
-    expect(testBoard.shipArray[1].locationArray).toStrictEqual([
+    testBoard = boardFactory();
+    testBoard.placeShip([
+      [7, 3],
+      [8, 3],
+      [9, 3],
+    ]);
+    expect(testBoard.shipArray[0].locationArray).toStrictEqual([
       [7, 3],
       [8, 3],
       [9, 3],
@@ -45,11 +52,41 @@ describe("place ship", () => {
   });
 });
 
+// Place SHIPS (multiple)
+
+describe("places ships (all 5)", () => {
+  beforeAll(() => {
+    testBoard = boardFactory();
+    testBoard.placeShips("computer");
+  });
+
+  it("has 5 ships in the ship array", () => {
+    expect(testBoard.shipArray.length).toBe(5);
+  });
+
+  it("has the correct length for each ship", () => {
+    expect(testBoard.shipArray[0].locationArray.length).toBe(5);
+    expect(testBoard.shipArray[1].locationArray.length).toBe(4);
+    expect(testBoard.shipArray[2].locationArray.length).toBe(3);
+    expect(testBoard.shipArray[3].locationArray.length).toBe(3);
+    expect(testBoard.shipArray[4].locationArray.length).toBe(2);
+  });
+});
+
 // Receiving attacks
 describe("receive attack", () => {
-  testBoard = boardFactory();
-  testBoard.placeShip(2, [5, 1], "v");
-  testBoard.placeShip(3, [7, 3], "h");
+  beforeAll(() => {
+    testBoard = boardFactory();
+    testBoard.placeShip([
+      [5, 1],
+      [5, 2],
+    ]);
+    testBoard.placeShip([
+      [7, 3],
+      [8, 3],
+      [9, 3],
+    ]);
+  });
 
   it("hits a boat", () => {
     testBoard.receiveAttack([5, 2]);
@@ -64,9 +101,18 @@ describe("receive attack", () => {
 
 // Checking if allSunk
 describe("allSunk", () => {
-  testBoard = boardFactory();
-  testBoard.placeShip(2, [5, 1], "v");
-  testBoard.placeShip(3, [7, 3], "h");
+  beforeAll(() => {
+    testBoard = boardFactory();
+    testBoard.placeShip([
+      [5, 1],
+      [5, 2],
+    ]);
+    testBoard.placeShip([
+      [7, 3],
+      [8, 3],
+      [9, 3],
+    ]);
+  });
 
   it("returns false when all boats are not sunk", () => {
     expect(testBoard.allSunk()).toBe(false);
