@@ -19,6 +19,7 @@
   "rules": {
     "no-console": "off",
     "no-plusplus": "off",
-    "prefer-const": "off"
+    "prefer-const": "off",
+    "radix": "off"
   }
 }

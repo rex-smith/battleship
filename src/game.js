@@ -1,67 +1,61 @@
-import displayController from "./displayController";
+import * as displayController from "./displayController";
 
 export default function gameFactory(playerOne, playerTwo) {
-  let activePlayer = playerOne;
-  let enemyPlayer = playerTwo;
-
-  function setupGame() {
-    this.activePlayer.setBoard();
-    this.enemyPlayer.setBoard();
+  async function setupGame() {
+    await playerOne.setBoard();
+    await playerTwo.setBoard();
   }
 
-  function switchActivePlayer() {
-    if (this.activePlayer === playerOne) {
-      this.activePlayer = playerTwo;
-      this.enemyPlayer = playerOne;
-    } else {
-      this.activePlayer = playerOne;
-      this.enemyPlayer = playerTwo;
-    }
+  function displayRecords() {
+    const playerOneWins = document.getElementById("player-one-wins");
+    const playerOneLosses = document.getElementById("player-one-losses");
+    const playerTwoWins = document.getElementById("player-two-wins");
+    const playerTwoLosses = document.getElementById("player-two-losses");
+    playerOneWins.innerText = `${playerOne.wins}`;
+    playerOneLosses.innerText = `${playerOne.losses}`;
+    playerTwoWins.innerText = `${playerTwo.wins}`;
+    playerTwoLosses.innerText = `${playerTwo.losses}`;
   }
 
   function gameOver() {
-    return (
-      this.enemyPlayer.board.allSunk() || this.activePlayer.board.allSunk()
-    );
+    return playerOne.board.allSunk() || playerTwo.board.allSunk();
   }
 
-  function endGame() {
+  function endGame(player, enemy) {
     // Record win / loss data
-    this.activePlayer.win();
-    this.enemyPlayer.lose();
+    player.win();
+    enemy.lose();
     // Announce game end
-    console.log(`Game over! ${this.activePlayer.name} won the game!`);
+    displayController.displayMessage(`Game over! ${player.name} won the game!`);
     // Show record
-    playerOne.printRecord();
-    playerTwo.printRecord();
-    // Ask if want to play a new game [NOT INCLUDED YET]
-    alert("Do you want to play a new game? (y/n)");
+    displayRecords();
   }
 
-  function playTurn() {
-    displayController.showBoard(this.enemyPlayer.board);
+  async function playTurn(player, enemy) {
+    displayController.showBoard(enemy.board);
+
     // Get shot coordinates from player
-    let shotCoordinates = this.activePlayer.shoot();
+    let shotCoordinates = await player.getShotCoordinates();
 
     // Process shot
-    this.enemyPlayer.board.receiveAttack(shotCoordinates);
-    this.activePlayer.shotHistory.push(shotCoordinates);
+    console.log(`${player.name} shoots at cell ${shotCoordinates}`);
+    enemy.board.receiveAttack(shotCoordinates);
+    player.shotHistory.push(shotCoordinates);
+
+    if (gameOver()) {
+      endGame();
+    } else {
+      playTurn(enemy, player);
+    }
   }
 
   function playGame() {
-    while (!gameOver()) {
-      playTurn();
-      if (!gameOver) {
-        switchActivePlayer();
-      }
-    }
-    endGame();
+    playTurn(playerOne, playerTwo);
   }
 
   return {
-    activePlayer,
-    enemyPlayer,
-    switchActivePlayer,
+    playerOne,
+    playerTwo,
     gameOver,
     setupGame,
     playGame,

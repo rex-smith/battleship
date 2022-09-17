@@ -2,9 +2,9 @@ import shipFactory from "./ship";
 import {
   getRandomCell,
   getRandomDirection,
-  getCellFromHuman,
-  getDirectionFromHuman,
-} from "./randomCell";
+  cellCoordinatesFromCellId,
+} from "./cellSelection";
+import * as displayController from "./displayController";
 
 export default function boardFactory() {
   let missedAttacks = [];
@@ -64,43 +64,87 @@ export default function boardFactory() {
     return locationArray;
   }
 
+  async function getDirectionFromHuman() {
+    // Asynchronous function to wait for human to input using arrow keys or click button
+    return new Promise((resolve) => {
+      document.addEventListener("keydown", (e) => {
+        let direction;
+        if (e.keycode === 40 || e.keycode === 38) {
+          direction = "v";
+        } else if (e.keycode === 37 || e.keycode === 39) {
+          direction = "h";
+        }
+        resolve(direction);
+      });
+    });
+  }
+
+  async function getStartCellFromHuman(length, direction) {
+    return new Promise((resolve) => {
+      let cells = document.querySelectorAll(".cell");
+      cells.forEach((cell) => {
+        cell.addEventListener("click", (e) => {
+          let startCoordinates = cellCoordinatesFromCellId(e.target.id);
+          if (
+            validLocationArray(
+              buildLocationArray(length, startCoordinates, direction)
+            )
+          ) {
+            displayController.resetPlayerBoard();
+            resolve(startCoordinates);
+          } else {
+            displayController.displayMessage(
+              "This is not a valid starting cell. Please choose another one."
+            );
+          }
+        });
+      });
+    });
+  }
+
   function placeShip(locationArray) {
     let newShip = shipFactory(locationArray);
     shipArray.push(newShip);
   }
 
-  function getStartCell(playerType) {
+  async function getStartCell(playerType, length, direction) {
     let startCell = [0, 0];
     if (playerType === "computer") {
-      startCell = getRandomCell();
+      startCell = await getRandomCell();
     } else {
-      startCell = getCellFromHuman();
+      startCell = await getStartCellFromHuman(length, direction);
     }
     return startCell;
   }
 
-  function getDirection(playerType) {
+  async function getDirection(playerType) {
     let direction = "";
     if (playerType === "computer") {
-      direction = getRandomDirection();
+      direction = await getRandomDirection();
     } else {
-      direction = getDirectionFromHuman();
+      displayController.displayMessage(
+        "Please choose a direction using your arrow keys. Horizontal: Left or Right Key, Vertical: Up or Down Key."
+      );
+      direction = await getDirectionFromHuman();
     }
     return direction;
   }
 
-  function placeShips(playerType) {
+  async function getLocationArray(playerType, length) {
+    let direction = await getDirection(playerType);
+    let startCell = await getStartCell(playerType);
+    let locationArray = buildLocationArray(length, startCell, direction);
+    if (!validLocationArray(locationArray)) {
+      locationArray = await getLocationArray(playerType, length);
+    }
+    return locationArray;
+  }
+
+  async function placeShips(playerType) {
     const battleShipLengths = [5, 4, 3, 3, 2];
     for (let i = 0; i < battleShipLengths.length; i++) {
-      let locationArray = [0, 0];
-      while (!validLocationArray(locationArray)) {
-        let length = battleShipLengths[i];
-        // Direction
-        let direction = getDirection(playerType);
-        // Start Cell
-        let startCell = getStartCell(playerType);
-        locationArray = buildLocationArray(length, startCell, direction);
-      }
+      let length = battleShipLengths[i];
+      let locationArray = await getLocationArray(playerType, length);
       placeShip(locationArray);
     }
   }
@@ -133,6 +177,7 @@ export default function boardFactory() {
     shipArray,
     missedAttacks,
     buildLocationArray,
+    getDirectionFromHuman,
     receiveAttack,
     allSunk,
     placeShips,

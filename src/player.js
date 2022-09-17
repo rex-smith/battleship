@@ -1,67 +1,73 @@
 import boardFactory from "./board";
-import { getCellFromHuman, getRandomCell } from "./randomCell";
+import { getRandomCell, cellCoordinatesFromCellId } from "./cellSelection";
+import * as displayController from "./displayController";
 
 export default function playerFactory(name, playerType) {
+  // Somehow undefined
   let wins = 0;
   let losses = 0;
   let board = boardFactory();
-
-  function printRecord() {
-    console.log(`${name}: ${wins} win(s), ${losses} loss(es)`);
-  }
-
   const shotHistory = [];
 
   function win() {
-    wins += 1;
+    this.wins += 1;
   }
 
   function lose() {
-    losses += 1;
+    this.losses += 1;
   }
 
-  function setBoard() {
-    board.placeShips(playerType);
+  async function setBoard() {
+    await board.placeShips(playerType);
   }
 
-  function getHumanShot() {
-    let shotCoordinates = getCellFromHuman();
-    if (shotHistory.includes(shotCoordinates)) {
-      console.log(
-        "You have already shot at this cell. Please choose another one."
-      );
-      shotCoordinates = getCellFromHuman();
-    }
-    return shotCoordinates;
+  async function getHumanShot() {
+    return new Promise((resolve) => {
+      let cells = document.querySelectorAll(".cell");
+      cells.forEach((cell) => {
+        cell.addEventListener("click", (e) => {
+          let shotCoordinates = cellCoordinatesFromCellId(e.target.id);
+          if (this.shotHistory.includes(shotCoordinates)) {
+            displayController.displayMessage(
+              "You have already shot at this cell. Please choose another one."
+            );
+          } else {
+            displayController.resetPlayerBoard();
+            resolve(shotCoordinates);
+          }
+        });
+      });
+    });
   }
 
-  function getComputerShot() {
-    let shotCoordinates = getRandomCell();
+  async function getComputerShot() {
+    let shotCoordinates = await getRandomCell();
     if (shotHistory.includes(shotCoordinates)) {
       shotCoordinates = getComputerShot();
     }
     return shotCoordinates;
   }
 
-  function shoot() {
+  async function getShotCoordinates() {
     let shotCoordinates;
     if (playerType === "computer") {
-      shotCoordinates = getComputerShot();
+      shotCoordinates = await getComputerShot();
     } else {
-      shotCoordinates = getHumanShot();
+      shotCoordinates = await getHumanShot();
     }
     return shotCoordinates;
   }
 
   return {
+    wins,
+    losses,
     playerType,
     name,
     board,
     setBoard,
     shotHistory,
-    printRecord,
     win,
     lose,
-    shoot,
+    getShotCoordinates,
   };
 }

@@ -8,8 +8,10 @@ describe("setting the board", () => {
     testPlayer = playerFactory("Player 1", "computer");
   });
 
-  it("sets up a board with 5 ships", () => {
-    testPlayer.setBoard();
+  it("sets up a board with 5 ships", async () => {
+    await testPlayer.setBoard();
     expect(testPlayer.board.shipArray.length).toBe(5);
   });
 });
+
+// Get shot from human

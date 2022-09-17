@@ -9,23 +9,24 @@
   <body>
     <nav>
       <div id="title">Battleship</div>
+      <button>New Game</button>
     </nav>
     <main>
       <div class="message-area">
-        <div class="message">Welcome to battleship!</div>
+        <div id="message">Welcome to battleship!</div>
       </div>
       <div class="board-container">
         <div class="board">
           <div class="cell" id="1x1"></div>
-          <div class="cell" id="2x1"></div>
-          <div class="cell" id="3x1"></div>
-          <div class="cell" id="4x1"></div>
-          <div class="cell" id="5x1"></div>
-          <div class="cell" id="6x1"></div>
-          <div class="cell" id="7x1"></div>
-          <div class="cell" id="8x1"></div>
-          <div class="cell" id="9x1"></div>
-          <div class="cell" id="10x1"></div>
+          <div class="cell" id="1x2"></div>
+          <div class="cell" id="1x3"></div>
+          <div class="cell" id="1x4"></div>
+          <div class="cell" id="1x5"></div>
+          <div class="cell" id="1x6"></div>
+          <div class="cell" id="1x7"></div>
+          <div class="cell" id="1x8"></div>
+          <div class="cell" id="1x9"></div>
+          <div class="cell" id="1x10"></div>
           <div class="cell" id="2x1"></div>
           <div class="cell" id="2x2"></div>
           <div class="cell" id="2x3"></div>
@@ -116,6 +117,16 @@
           <div class="cell" id="10x8"></div>
           <div class="cell" id="10x9"></div>
           <div class="cell" id="10x10"></div>
+        </div>
+      </div>
+      <div class="record-container">
+        <div id="player-one-record">
+          Player 1: <span id="player-one-wins">0</span> wins,
+          <span id="player-one-losses">0</span> losses
+        </div>
+        <div id="player-two-record">
+          Player 2: <span id="player-two-wins">0</span> wins,
+          <span id="player-two-losses">0</span> losses
         </div>
       </div>
     </main>

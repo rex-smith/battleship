@@ -55,9 +55,9 @@ describe("place ship", () => {
 // Place SHIPS (multiple)
 
 describe("places ships (all 5)", () => {
-  beforeAll(() => {
+  beforeAll(async () => {
     testBoard = boardFactory();
-    testBoard.placeShips("computer");
+    await testBoard.placeShips("computer");
   });
 
   it("has 5 ships in the ship array", () => {
