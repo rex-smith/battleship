@@ -52,6 +52,50 @@ describe("place ship", () => {
   });
 });
 
+// Validating the location array
+
+describe("validate location array", () => {
+  it("returns false when the location array overlaps a cell already in use", () => {
+    testBoard = boardFactory();
+    testBoard.placeShip([
+      [7, 3],
+      [8, 3],
+      [9, 3],
+    ]);
+    let result = testBoard.validLocationArray([
+      [7, 3],
+      [6, 3],
+      [5, 3],
+    ]);
+    expect(result).toBe(false);
+  });
+
+  it("returns false when the location array includes a cell off the board", () => {
+    testBoard = boardFactory();
+    let result = testBoard.validLocationArray([
+      [11, 2],
+      [10, 2],
+      [9, 2],
+    ]);
+    expect(result).toBe(false);
+  });
+
+  it("returns true when the location array is okay", () => {
+    testBoard = boardFactory();
+    testBoard.placeShip([
+      [7, 3],
+      [8, 3],
+      [9, 3],
+    ]);
+    let result = testBoard.validLocationArray([
+      [1, 2],
+      [2, 2],
+      [3, 2],
+    ]);
+    expect(result).toBe(true);
+  });
+});
+
 // Place SHIPS (multiple)
 
 describe("places ships (all 5)", () => {

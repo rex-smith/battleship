@@ -38,12 +38,12 @@ export default function gameFactory(playerOne, playerTwo) {
     let shotCoordinates = await player.getShotCoordinates();
 
     // Process shot
-    console.log(`${player.name} shoots at cell ${shotCoordinates}`);
     enemy.board.receiveAttack(shotCoordinates);
     player.shotHistory.push(shotCoordinates);
+    console.log(player.shotHistory);
 
     if (gameOver()) {
-      endGame();
+      endGame(player, enemy);
     } else {
       playTurn(enemy, player);
     }

@@ -20,6 +20,7 @@
     "no-console": "off",
     "no-plusplus": "off",
     "prefer-const": "off",
-    "radix": "off"
+    "radix": "off",
+    "no-await-in-loop": "warning"
   }
 }

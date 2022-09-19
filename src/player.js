@@ -1,9 +1,12 @@
 import boardFactory from "./board";
-import { getRandomCell, cellCoordinatesFromCellId } from "./cellSelection";
+import {
+  getRandomCell,
+  cellCoordinatesFromCellId,
+  overlappingCoordinates,
+} from "./cellSelection";
 import * as displayController from "./displayController";
 
 export default function playerFactory(name, playerType) {
-  // Somehow undefined
   let wins = 0;
   let losses = 0;
   let board = boardFactory();
@@ -27,7 +30,7 @@ export default function playerFactory(name, playerType) {
       cells.forEach((cell) => {
         cell.addEventListener("click", (e) => {
           let shotCoordinates = cellCoordinatesFromCellId(e.target.id);
-          if (this.shotHistory.includes(shotCoordinates)) {
+          if (overlappingCoordinates(shotHistory, [shotCoordinates])) {
             displayController.displayMessage(
               "You have already shot at this cell. Please choose another one."
             );
@@ -42,7 +45,7 @@ export default function playerFactory(name, playerType) {
 
   async function getComputerShot() {
     let shotCoordinates = await getRandomCell();
-    if (shotHistory.includes(shotCoordinates)) {
+    if (overlappingCoordinates(shotHistory, [shotCoordinates])) {
       shotCoordinates = getComputerShot();
     }
     return shotCoordinates;

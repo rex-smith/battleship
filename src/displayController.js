@@ -4,7 +4,8 @@ function getCellFromCoordinates(coordinates) {
 }
 
 function setCellColor(cell, color) {
-  cell.style.background = color;
+  let styledCell = cell;
+  styledCell.style.background = color;
 }
 
 export const resetPlayerBoard = () => {

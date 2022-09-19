@@ -3,6 +3,9 @@ import {
   getRandomCell,
   getRandomDirection,
   cellCoordinatesFromCellId,
+  overlappingCoordinates,
+  coordinatesOnBoard,
+  sameCoordinates,
 } from "./cellSelection";
 import * as displayController from "./displayController";
 
@@ -11,38 +14,15 @@ export default function boardFactory() {
   let shipArray = [];
   let occupiedCells = [];
 
-  function sameCoordinates(coordinatesPairOne, coordinatesPairTwo) {
-    if (
-      coordinatesPairOne[0] === coordinatesPairTwo[0] &&
-      coordinatesPairOne[1] === coordinatesPairTwo[1]
-    ) {
-      return true;
-    }
-    return false;
-  }
-
   function validLocationArray(locationArray) {
     // Check if any off the board
-    for (let i = 0; i < locationArray.length; i++) {
-      if (
-        !(
-          locationArray[i][0] >= 1 &&
-          locationArray[i][0] <= 10 &&
-          locationArray[i][1] >= 1 &&
-          locationArray[i][1] <= 10
-        )
-      ) {
-        return false;
-      }
+    if (!coordinatesOnBoard(locationArray)) {
+      return false;
     }
 
     // Check if overlaps with occupied
-    for (let i = 0; i < occupiedCells.length; i++) {
-      for (let j = 0; j < locationArray.length; j++) {
-        if (sameCoordinates(occupiedCells[i], locationArray[j])) {
-          return false;
-        }
-      }
+    if (overlappingCoordinates(occupiedCells, locationArray)) {
+      return false;
     }
 
     return true;
@@ -105,6 +85,10 @@ export default function boardFactory() {
   function placeShip(locationArray) {
     let newShip = shipFactory(locationArray);
     shipArray.push(newShip);
+    for (let i = 0; i < locationArray.length; i++) {
+      occupiedCells.push(locationArray[i]);
+    }
+    console.log(`Ship placed at: ${locationArray}`);
   }
 
   async function getStartCell(playerType, length, direction) {
@@ -141,10 +125,11 @@ export default function boardFactory() {
   }
 
   async function placeShips(playerType) {
+    let locationArray = [];
     const battleShipLengths = [5, 4, 3, 3, 2];
     for (let i = 0; i < battleShipLengths.length; i++) {
       let length = battleShipLengths[i];
-      let locationArray = await getLocationArray(playerType, length);
+      locationArray = await getLocationArray(playerType, length);
       placeShip(locationArray);
     }
   }
@@ -182,5 +167,8 @@ export default function boardFactory() {
     allSunk,
     placeShips,
     placeShip,
+    validLocationArray,
+    sameCoordinates,
+    overlappingCoordinates,
   };
 }
