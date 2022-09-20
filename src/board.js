@@ -49,17 +49,21 @@ export default function boardFactory() {
     return new Promise((resolve) => {
       document.addEventListener("keydown", (e) => {
         let direction;
-        if (e.keycode === 40 || e.keycode === 38) {
+        if (e.keyCode === 40 || e.keyCode === 38) {
           direction = "v";
-        } else if (e.keycode === 37 || e.keycode === 39) {
+          resolve(direction);
+        } else if (e.keyCode === 37 || e.keyCode === 39) {
           direction = "h";
+          resolve(direction);
         }
-        resolve(direction);
       });
     });
   }
 
   async function getStartCellFromHuman(length, direction) {
+    displayController.displayMessage(
+      `Please choose a starting cell for ship with length ${length}`
+    );
     return new Promise((resolve) => {
       let cells = document.querySelectorAll(".cell");
       cells.forEach((cell) => {
@@ -134,12 +138,20 @@ export default function boardFactory() {
     }
   }
 
-  function receiveAttack(coordinates) {
+  function processHit(player, ship, location) {
+    ship.hit(location);
+    player.openHitHistory.push(ship.locationArray[location]);
+    if (ship.isSunk()) {
+      player.recordSink(ship);
+    }
+  }
+
+  function receiveAttack(player, coordinates) {
     let confirmedHit = false;
     for (let i = 0; i < shipArray.length; i++) {
       for (let j = 0; j < shipArray[i].locationArray.length; j++) {
         if (sameCoordinates(shipArray[i].locationArray[j], coordinates)) {
-          shipArray[i].hit(j);
+          processHit(player, shipArray[i], j);
           confirmedHit = true;
         }
       }

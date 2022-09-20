@@ -3,14 +3,27 @@ import {
   getRandomCell,
   cellCoordinatesFromCellId,
   overlappingCoordinates,
+  coordinatesOnBoard,
+  sameCoordinates,
 } from "./cellSelection";
 import * as displayController from "./displayController";
 
-export default function playerFactory(name, playerType) {
-  let wins = 0;
-  let losses = 0;
+const transformations = [
+  [-1, 0],
+  [-1, 1],
+  [0, 1],
+  [1, 1],
+  [1, 0],
+  [1, -1],
+  [0, -1],
+  [-1, -1],
+];
+
+export default function playerFactory(name, playerType, wins = 0, losses = 0) {
   let board = boardFactory();
-  const shotHistory = [];
+  let shotHistory = [];
+  let openHitHistory = [];
+  let sinkHistory = [];
 
   function win() {
     this.wins += 1;
@@ -22,6 +35,23 @@ export default function playerFactory(name, playerType) {
 
   async function setBoard() {
     await board.placeShips(playerType);
+  }
+
+  function recordSink(ship) {
+    for (let i = 0; i < ship.locationArray.length; i++) {
+      sinkHistory.push(ship.locationArray[i]);
+      removeSinkHits(ship);
+    }
+  }
+
+  function removeSinkHits(ship) {
+    for (let i = 0; i < ship.locationArray.length; i++) {
+      for (let j = openHitHistory.length - 1; j >= 0; j--) {
+        if (sameCoordinates(ship.locationArray[i], openHitHistory[j])) {
+          openHitHistory.splice(j, 1);
+        }
+      }
+    }
   }
 
   async function getHumanShot() {
@@ -43,8 +73,37 @@ export default function playerFactory(name, playerType) {
     });
   }
 
+  async function getNearbyCell() {
+    let newShotCoordinates;
+    let availableNearbyCell = false;
+    for (let i = 0; i < transformations.length; i++) {
+      let previousHit = openHitHistory.at(-1);
+      let shotCoordinates = [
+        transformations[i][0] + previousHit[0],
+        transformations[i][1] + previousHit[1],
+      ];
+      if (
+        coordinatesOnBoard([shotCoordinates]) &&
+        !overlappingCoordinates(shotHistory, [shotCoordinates])
+      ) {
+        newShotCoordinates = shotCoordinates;
+        availableNearbyCell = true;
+        break;
+      }
+    }
+    if (availableNearbyCell === false) {
+      newShotCoordinates = await getRandomCell();
+    }
+    return newShotCoordinates;
+  }
+
   async function getComputerShot() {
-    let shotCoordinates = await getRandomCell();
+    let shotCoordinates;
+    if (openHitHistory.length > 0) {
+      shotCoordinates = await getNearbyCell();
+    } else {
+      shotCoordinates = await getRandomCell();
+    }
     if (overlappingCoordinates(shotHistory, [shotCoordinates])) {
       shotCoordinates = getComputerShot();
     }
@@ -69,8 +128,11 @@ export default function playerFactory(name, playerType) {
     board,
     setBoard,
     shotHistory,
+    openHitHistory,
+    sinkHistory,
     win,
     lose,
     getShotCoordinates,
+    recordSink,
   };
 }

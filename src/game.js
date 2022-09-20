@@ -31,6 +31,14 @@ export default function gameFactory(playerOne, playerTwo) {
     displayRecords();
   }
 
+  function gameDelay(delay) {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve();
+      }, delay);
+    });
+  }
+
   async function playTurn(player, enemy) {
     displayController.showBoard(enemy.board);
 
@@ -38,13 +46,16 @@ export default function gameFactory(playerOne, playerTwo) {
     let shotCoordinates = await player.getShotCoordinates();
 
     // Process shot
-    enemy.board.receiveAttack(shotCoordinates);
+    enemy.board.receiveAttack(player, shotCoordinates);
     player.shotHistory.push(shotCoordinates);
-    console.log(player.shotHistory);
+    displayController.showBoard(enemy.board);
+
+    // Delay after shot has been processed
 
     if (gameOver()) {
       endGame(player, enemy);
     } else {
+      await gameDelay(100);
       playTurn(enemy, player);
     }
   }

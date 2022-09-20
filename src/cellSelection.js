@@ -1,29 +1,23 @@
-let delay = 500;
-
 export async function getRandomCell() {
   return new Promise((resolve) => {
-    setTimeout(() => {
-      let x = Math.floor(Math.random() * 10) + 1;
-      let y = Math.floor(Math.random() * 10) + 1;
-      resolve([x, y]);
-    }, delay);
+    let x = Math.floor(Math.random() * 10) + 1;
+    let y = Math.floor(Math.random() * 10) + 1;
+    resolve([x, y]);
   });
 }
 
 export async function getRandomDirection() {
   return new Promise((resolve) => {
-    setTimeout(() => {
-      let directions = ["h", "v"];
-      let direction = directions[Math.floor(Math.random() * 2)];
-      resolve(direction);
-    }, delay);
+    let directions = ["h", "v"];
+    let direction = directions[Math.floor(Math.random() * 2)];
+    resolve(direction);
   });
 }
 
 export function cellCoordinatesFromCellId(cellId) {
   let coordinates = cellId.split("x");
-  coordinates = coordinates.forEach((string) => parseInt(string));
-  return coordinates;
+  const intCoordinates = coordinates.map((string) => parseInt(string));
+  return intCoordinates;
 }
 
 export function sameCoordinates(coordinatesPairOne, coordinatesPairTwo) {
