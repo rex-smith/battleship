@@ -15,17 +15,17 @@ nav {
   background-color: navy;
   color: white;
   display: flex;
-  align-items: center;
-  justify-items: space-between;
+  flex-direction: row;
+  justify-content: space-between;
   padding-left: 15px;
+  padding: 0px 10px;
 }
 
 #title {
   margin: auto 10px;
 }
 
-.message-area,
-.record-container {
+.message-area {
   margin: 20px auto;
   width: 900px;
   padding: 10px;
@@ -41,6 +41,58 @@ nav {
   box-shadow: 0px 0px 4px 0px rgb(124, 124, 124);
 }
 
+.player-info-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  margin: 20px auto;
+  width: 900px;
+  padding: 10px;
+  border-radius: 10px;
+  font-weight: bold;
+  color: navy;
+}
+
+.player-info {
+  display: flex;
+  flex-direction: column;
+  width: 300px;
+  border-radius: 5px;
+  padding: 15px;
+  box-shadow: 0px 0px 4px 0px rgb(124, 124, 124);
+}
+
+.player-title {
+  font-size: 40px;
+  font-weight: bold;
+  color: navy;
+  margin-bottom: 10px;
+}
+
+.record-field {
+  margin-bottom: 10px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.info-label {
+  font-size: 26px;
+  font-weight: bold;
+  color: navy;
+  width: 200px;
+}
+
+.wins {
+  color: green;
+  font-size: 26px;
+}
+
+.losses {
+  color: rgb(133, 9, 9);
+  font-size: 26px;
+}
+
 .board-container {
   margin: 20px auto;
   width: 800px;
@@ -48,7 +100,7 @@ nav {
   justify-content: center;
 }
 
-.board {
+#board {
   display: grid;
   grid-template-columns: repeat(10, 50px);
   grid-template-rows: repeat(10, 50px);
@@ -57,7 +109,6 @@ nav {
 
 .cell {
   background-color: skyblue;
-  border: 1px solid black;
 }
 
 .cell:hover {
@@ -72,12 +123,115 @@ button {
   font-weight: bold;
   color: white;
   background-color: navy;
-  border: none;
+  border: 1px solid white;
   border-radius: 10px;
-  box-shadow: 0px 0px 4px 0px rgb(124, 124, 124);
 }
 
 button:hover {
   background-color: white;
   color: navy;
+  border: 1px solid navy;
+}
+
+#new-game-form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin: 20px auto;
+  width: 900px;
+}
+
+.input-side {
+  width: 400px;
+  display: flex;
+  flex-direction: column;
+  border-radius: 5px;
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0px 0px 4px 0px rgb(124, 124, 124);
+}
+
+.input-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.field-vertical {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 10px;
+}
+
+.field-horizontal {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+
+label {
+  margin-bottom: 10px;
+  font-size: 22px;
+}
+
+input[type="text"] {
+  height: 30px;
+  font-size: 18px;
+  border: none;
+  box-shadow: 0px 0px 3px 0px gray;
+  border-radius: 5px;
+  padding: 5px;
+}
+
+input[type="text"]:focus {
+  outline: none;
+  border: 1px solid navy;
+  box-shadow: 0px 0px 4px 0px navy;
+}
+
+input[type="radio"] {
+  display: none;
+}
+
+.player-type-option {
+  background: rgb(247, 247, 247);
+  font-size: 18px;
+  color: gray;
+  border: 2px solid gray;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 5px;
+  height: 50px;
+  width: 150px;
+  text-align: center;
+  line-height: 40px;
+  margin: 5px;
+  transition: all 0.3s ease;
+}
+
+input[type="radio"]:checked + .player-type-option {
+  color: white;
+  border: none;
+  background: navy;
+}
+
+/* Form Validation */
+
+input[type="text"].invalid {
+  border: 1px solid rgb(148, 33, 33);
+  background-color: #f2dede;
+  color: rgb(94, 21, 21);
+}
+
+input[type="text"].valid {
+  border: 1px solid rgb(0, 148, 7);
+  background-color: #e6ffea;
+  color: rgb(0, 85, 4);
+}
+
+.hidden {
+  display: none;
 }

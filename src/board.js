@@ -60,13 +60,24 @@ export default function boardFactory() {
     });
   }
 
-  async function getStartCellFromHuman(length, direction) {
+  async function getStartCellFromHuman(board, length, direction) {
     displayController.displayMessage(
       `Please choose a starting cell for ship with length ${length}`
     );
     return new Promise((resolve) => {
       let cells = document.querySelectorAll(".cell");
       cells.forEach((cell) => {
+        // Highlighting potential cells
+        cell.addEventListener("mouseover", (e) => {
+          let coordinates = cellCoordinatesFromCellId(e.target.id);
+          displayController.showPlacementCells(
+            board,
+            coordinates,
+            length,
+            direction
+          );
+        });
+
         cell.addEventListener("click", (e) => {
           let startCoordinates = cellCoordinatesFromCellId(e.target.id);
           if (
@@ -92,15 +103,14 @@ export default function boardFactory() {
     for (let i = 0; i < locationArray.length; i++) {
       occupiedCells.push(locationArray[i]);
     }
-    console.log(`Ship placed at: ${locationArray}`);
   }
 
-  async function getStartCell(playerType, length, direction) {
+  async function getStartCell(board, playerType, length, direction) {
     let startCell = [0, 0];
     if (playerType === "computer") {
       startCell = await getRandomCell();
     } else {
-      startCell = await getStartCellFromHuman(length, direction);
+      startCell = await getStartCellFromHuman(board, length, direction);
     }
     return startCell;
   }
@@ -118,12 +128,12 @@ export default function boardFactory() {
     return direction;
   }
 
-  async function getLocationArray(playerType, length) {
+  async function getLocationArray(board, playerType, length) {
     let direction = await getDirection(playerType);
-    let startCell = await getStartCell(playerType);
+    let startCell = await getStartCell(board, playerType, length, direction);
     let locationArray = buildLocationArray(length, startCell, direction);
     if (!validLocationArray(locationArray)) {
-      locationArray = await getLocationArray(playerType, length);
+      locationArray = await getLocationArray(board, playerType, length);
     }
     return locationArray;
   }
@@ -133,7 +143,8 @@ export default function boardFactory() {
     const battleShipLengths = [5, 4, 3, 3, 2];
     for (let i = 0; i < battleShipLengths.length; i++) {
       let length = battleShipLengths[i];
-      locationArray = await getLocationArray(playerType, length);
+      displayController.showPlacementBoard(this);
+      locationArray = await getLocationArray(this, playerType, length);
       placeShip(locationArray);
     }
   }

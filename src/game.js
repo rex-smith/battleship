@@ -2,19 +2,9 @@ import * as displayController from "./displayController";
 
 export default function gameFactory(playerOne, playerTwo) {
   async function setupGame() {
+    displayController.displayInfo(playerOne, playerTwo);
     await playerOne.setBoard();
     await playerTwo.setBoard();
-  }
-
-  function displayRecords() {
-    const playerOneWins = document.getElementById("player-one-wins");
-    const playerOneLosses = document.getElementById("player-one-losses");
-    const playerTwoWins = document.getElementById("player-two-wins");
-    const playerTwoLosses = document.getElementById("player-two-losses");
-    playerOneWins.innerText = `${playerOne.wins}`;
-    playerOneLosses.innerText = `${playerOne.losses}`;
-    playerTwoWins.innerText = `${playerTwo.wins}`;
-    playerTwoLosses.innerText = `${playerTwo.losses}`;
   }
 
   function gameOver() {
@@ -28,7 +18,7 @@ export default function gameFactory(playerOne, playerTwo) {
     // Announce game end
     displayController.displayMessage(`Game over! ${player.name} won the game!`);
     // Show record
-    displayRecords();
+    displayController.displayInfo(playerOne, playerTwo);
   }
 
   function gameDelay(delay) {
@@ -40,7 +30,8 @@ export default function gameFactory(playerOne, playerTwo) {
   }
 
   async function playTurn(player, enemy) {
-    displayController.showBoard(enemy.board);
+    displayController.showAttackBoard(enemy.board);
+    displayController.displayMessage(`${player.name}'s Turn!`);
 
     // Get shot coordinates from player
     let shotCoordinates = await player.getShotCoordinates();
@@ -48,19 +39,20 @@ export default function gameFactory(playerOne, playerTwo) {
     // Process shot
     enemy.board.receiveAttack(player, shotCoordinates);
     player.shotHistory.push(shotCoordinates);
-    displayController.showBoard(enemy.board);
+    displayController.showAttackBoard(enemy.board);
 
     // Delay after shot has been processed
 
     if (gameOver()) {
       endGame(player, enemy);
     } else {
-      await gameDelay(100);
+      await gameDelay(500);
       playTurn(enemy, player);
     }
   }
 
   function playGame() {
+    displayController.displayInfo(playerOne, playerTwo);
     playTurn(playerOne, playerTwo);
   }
 
