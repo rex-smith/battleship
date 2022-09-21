@@ -82,6 +82,51 @@ export function showAttackBoard(board) {
   }
 }
 
+export function displayBoatHealth(player1, player2) {
+  let carrier1 = player1.board.shipArray[0];
+  let battleship1 = player1.board.shipArray[1];
+  let cruiser1 = player1.board.shipArray[2];
+  let submarine1 = player1.board.shipArray[3];
+  let patrol1 = player1.board.shipArray[4];
+  const playerOneCarrier = document.getElementById("player-one-carrier");
+  const playerOneBattleship = document.getElementById("player-one-battleship");
+  const playerOneCruiser = document.getElementById("player-one-cruiser");
+  const playerOneSubmarine = document.getElementById("player-one-submarine");
+  const playerOnePatrol = document.getElementById("player-one-patrol");
+  playerOneCarrier.setHTML(boatHealthHtml(carrier1));
+  playerOneBattleship.setHTML(boatHealthHtml(battleship1));
+  playerOneCruiser.setHTML(boatHealthHtml(cruiser1));
+  playerOneSubmarine.setHTML(boatHealthHtml(submarine1));
+  playerOnePatrol.setHTML(boatHealthHtml(patrol1));
+  let carrier2 = player2.board.shipArray[0];
+  let battleship2 = player2.board.shipArray[1];
+  let cruiser2 = player2.board.shipArray[2];
+  let submarine2 = player2.board.shipArray[3];
+  let patrol2 = player2.board.shipArray[4];
+  const playerTwoCarrier = document.getElementById("player-two-carrier");
+  const playerTwoBattleship = document.getElementById("player-two-battleship");
+  const playerTwoCruiser = document.getElementById("player-two-cruiser");
+  const playerTwoSubmarine = document.getElementById("player-two-submarine");
+  const playerTwoPatrol = document.getElementById("player-two-patrol");
+  playerTwoCarrier.setHTML(boatHealthHtml(carrier2));
+  playerTwoBattleship.setHTML(boatHealthHtml(battleship2));
+  playerTwoCruiser.setHTML(boatHealthHtml(cruiser2));
+  playerTwoSubmarine.setHTML(boatHealthHtml(submarine2));
+  playerTwoPatrol.setHTML(boatHealthHtml(patrol2));
+}
+
+export function boatHealthHtml(ship) {
+  let html = "";
+  let hits = ship.healthArray.reduce((partialSum, a) => partialSum + a, 0);
+  for (let i = 0; i < hits; i++) {
+    html += `<span class="dot hit"></span>`;
+  }
+  for (let i = 0; i < ship.healthArray.length - hits; i++) {
+    html += `<span class="dot"></span>`;
+  }
+  return html;
+}
+
 export function displayMessage(message) {
   let messageContainer = document.getElementById("message");
   messageContainer.innerText = message;

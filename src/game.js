@@ -19,6 +19,7 @@ export default function gameFactory(playerOne, playerTwo) {
     displayController.displayMessage(`Game over! ${player.name} won the game!`);
     // Show record
     displayController.displayInfo(playerOne, playerTwo);
+    displayController.displayBoatHealth(playerOne, playerTwo);
   }
 
   function gameDelay(delay) {
@@ -29,8 +30,17 @@ export default function gameFactory(playerOne, playerTwo) {
     });
   }
 
+  function getPlayerOne() {
+    return playerOne;
+  }
+
+  function getPlayerTwo() {
+    return playerTwo;
+  }
+
   async function playTurn(player, enemy) {
     displayController.showAttackBoard(enemy.board);
+    displayController.displayBoatHealth(getPlayerOne(), getPlayerTwo());
     displayController.displayMessage(`${player.name}'s Turn!`);
 
     // Get shot coordinates from player

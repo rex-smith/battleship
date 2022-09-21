@@ -93,6 +93,38 @@ nav {
   font-size: 26px;
 }
 
+.ships-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.ship-status-field {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-bottom: 5px;
+}
+
+.ship-status-value {
+  display: flex;
+  flex-direction: row;
+}
+
+.dot {
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
+  display: inline-block;
+  background-color: green;
+  margin: 0px 1px;
+}
+
+.hit {
+  background-color: rgb(94, 21, 21);
+}
+
 .board-container {
   margin: 20px auto;
   width: 800px;
